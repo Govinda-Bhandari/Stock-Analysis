@@ -1,0 +1,74 @@
+install.packages("quantmod")
+install.packages("timeSeries")
+install.packages("Quandl")
+library(plotly)
+library(Quandl)
+library(quantmod)
+library(timeSeries)
+install.packages("devtools") # if not installed
+install.packages("FinancialInstrument") #if not installed
+install.packages("PerformanceAnalytics") #if not installed
+
+# next install blotter from GitHub
+devtools::install_github("braverock/blotter")
+# next install quantstrat from GitHub
+devtools::install_github("braverock/quantstrat")install.packages("FinancialInstrument", repos="http://R-Forge.R-project.org")
+install.packages("blotter", repos="http://R-Forge.R-project.org")
+install.packages("quantstrat", repos="http://R-Forge.R-project.org")
+## Extracting Data from Quandl API 
+ING<-Quandl("WSE/INGBSK", api_key="FQwxjV23psbrzghi1Qbg",start_date="2016-01-01",end_date="2021-01-22",adjust=TRUE)
+View(ING)
+class(ING)
+## Cleaing and Transforming Data
+ING.WSE<- as.xts(zoo(ING[,2:8],order.by = as.Date(ING$Date)))
+class(ING.WSE)                    
+ING.Monthly<-to.period(ING.WSE,period = "months")
+View(ING.Monthly)
+barChart(ING.Monthly,type = "bars",show.grid = TRUE, name = "WSE ING BANK",bar.type = "ohlc",theme = "black",up.col="green",dn.col="red")
+##Candle Chart
+chartSeries(ING.Monthly,name = "ING Bank Stock Price WSE",type = "candlestick",time.scale = NULL)
+## Candle stick with diffrent chart color and background
+chartSeries(ING.Monthly,name = "ING Bank Stock Price WSE",type = "candlestick",time.scale = NULL,theme ="white",up.col="green",dn.col="red")
+## Technical Analysis
+## Simple Moving Average
+addSMA(n=5,col="green")
+addSMA(n=8,col="blue")
+addSMA(n=13,col = "red")
+## Relative Signal Strength
+addRSI()
+## Moving Average Convergaence Divergence with diffrent Argument
+addMACD(fast = 12,slow = 26,signal = 9,type = "EMA")
+addBBands(n=20,sd=2,maType = "SMA")
+
+candleChart(ING.WSE, up.col = "green", dn.col = "red", theme = "white", subset = "2020-01-29/")
+
+ING_sma_20 <- SMA(
+  Cl(ING.WSE),  # The closing price of AAPL, obtained by quantmod's Cl() function
+  n = 20     # The number of days in the moving average window
+)
+
+ING_sma_50 <- SMA(
+  Cl(ING.WSE),
+  n = 50
+)
+
+ING_sma_200 <- SMA(
+  Cl(ING.WSE),
+  n = 200
+)
+zoomChart("2020")  # Zoom into the year 2016 in the chart
+addTA(ING_sma_20, on = 1, col = "red")  # on = 1 plots the SMA with price
+addTA(ING_sma_50, on = 1, col = "blue")
+addTA(ING_sma_200, on = 1, col = "green")
+
+ING_trade <- ING.WSE
+ING_trade$`20d` <- ING_sma_20
+ING_trade$`50d` <- ING_sma_50
+
+regime_val <- sigComparison("", data = ING_trade,
+                            columns = c("ING_sma_20", "ING_sma_50"), relationship = "gt") -
+              sigComparison("", data = ING_trade,
+                            columns = c("ING_sma_20", "ING_sma_50"), relationship = "lt")
+plot(regime_val["2016"], main = "Regime", ylim = c(-2, 2))
+
+

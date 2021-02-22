@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1611430435055.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "E67BA251",
+    "lastKnownWriteTime" : 13229774884438113,
+    "last_content_update" : 1611430435055,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "F96AA76A",
+        "caption" : "ING.Monthly",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ING.Monthly&cache_key=F96AA76A",
+        "displayedObservations" : "61",
+        "environment" : "",
+        "object" : "ING.Monthly",
+        "preview" : "0",
+        "totalObservations" : "61",
+        "variables" : "5"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
